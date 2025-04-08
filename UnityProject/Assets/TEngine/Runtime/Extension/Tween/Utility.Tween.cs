@@ -14,7 +14,7 @@ namespace TEngine
             /// <summary>
             /// 设置动画辅助器。
             /// </summary>
-            /// <param name="textHelper">要设置的动画辅助器。</param>
+            /// <param name="textHelper">要设置的字符辅助器。</param>
             public static void SetTweenHelper(ITweenHelper textHelper)
             {
                 _tweenHelper = textHelper;
@@ -779,6 +779,48 @@ namespace TEngine
                 return _tweenHelper.UIFillAmount(target, startValue, endValue, duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime);
             }
 
+            public static long RotationAdditive(UnityEngine.Transform target, UnityEngine.Vector3 deltaValue, float duration, Ease ease = Ease.Default, int cycles = 1,
+                CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false)
+            {
+                if (_tweenHelper == null)
+                {
+                    throw new GameFrameworkException("ITweenHelper is invalid.");
+                }
+                return _tweenHelper.RotationAdditive(target, deltaValue, duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime);
+            }
+
+
+            public static long LocalRotationAdditive(UnityEngine.Transform target, UnityEngine.Vector3 deltaValue, float duration, Ease ease = Ease.Default, int cycles = 1,
+                CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false)
+            {
+                if (_tweenHelper == null)
+                {
+                    throw new GameFrameworkException("ITweenHelper is invalid.");
+                }
+                return _tweenHelper.LocalRotationAdditive(target, deltaValue, duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime);
+            }
+
+
+            public static long RotationAdditive(UnityEngine.Transform target, UnityEngine.Quaternion deltaValue, float duration, Ease ease = Ease.Default, int cycles = 1,
+                CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false)
+            {
+                if (_tweenHelper == null)
+                {
+                    throw new GameFrameworkException("ITweenHelper is invalid.");
+                }
+                return _tweenHelper.RotationAdditive(target, deltaValue, duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime);
+            }
+
+            public static long LocalRotationAdditive(UnityEngine.Transform target, UnityEngine.Quaternion deltaValue, float duration, Ease ease = Ease.Default,
+                int cycles = 1, CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false)
+            {
+                if (_tweenHelper == null)
+                {
+                    throw new GameFrameworkException("ITweenHelper is invalid.");
+                }
+                return _tweenHelper.LocalRotationAdditive(target, deltaValue, duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime);
+            }
+
             public static long MoveBezierPath(UnityEngine.Transform target, UnityEngine.Vector3[] path, float duration, Ease ease = Ease.Default, int cycles = 1,
                 CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false)
             {
@@ -790,6 +832,17 @@ namespace TEngine
             }
 
             public static long Custom<T>(T target, UnityEngine.Vector3 startValue, UnityEngine.Vector3 endValue, float duration, Action<T, UnityEngine.Vector3> onValueChange,
+                Ease ease = Ease.Default, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false)
+                where T : class
+            {
+                if (_tweenHelper == null)
+                {
+                    throw new GameFrameworkException("ITweenHelper is invalid.");
+                }
+                return _tweenHelper.Custom(target, startValue, endValue, duration, onValueChange, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime);
+            }
+
+            public static long Custom<T>(T target, uint startValue, uint endValue, float duration, Action<T, uint> onValueChange,
                 Ease ease = Ease.Default, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false)
                 where T : class
             {
@@ -824,7 +877,7 @@ namespace TEngine
         }
     }
     
-    public static class TweenExtensions
+    public static class DTweenExtensions
     {
         public static long OnComplete(this long tweenId, Action onComplete)
         {

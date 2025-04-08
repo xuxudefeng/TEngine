@@ -12,7 +12,7 @@ namespace TEngine
             {
                 if (_instance == null)
                 {
-                    _instance = Utility.Unity.FindObjectOfType<Settings>();
+                    _instance = GameObject.FindObjectOfType<Settings>();
 
                     if (_instance != null)
                     {
@@ -44,12 +44,7 @@ namespace TEngine
 #if UNITY_EDITOR
                 if (Instance == null)
                 {
-                    string[] guids = UnityEditor.AssetDatabase.FindAssets("t:UpdateSetting");
-                    if (guids.Length >= 1)
-                    {
-                        string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guids[0]);
-                        return UnityEditor.AssetDatabase.LoadAssetAtPath<UpdateSetting>(path);
-                    }
+                    return UnityEditor.AssetDatabase.LoadAssetAtPath<UpdateSetting>("Assets/TEngine/Settings/UpdateSetting.asset");
                 }
 #endif
                 return Instance.updateSetting;

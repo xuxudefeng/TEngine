@@ -71,8 +71,8 @@ namespace TEngine
             }
         }
 
-        private static readonly Dictionary<Language, string> _languageMap = new Dictionary<Language, string>();
-        private static readonly Dictionary<string, Language> _languageStrMap = new Dictionary<string, Language>();
+        private static readonly Dictionary<Language, string> s_LanguageMap = new Dictionary<Language, string>();
+        private static readonly Dictionary<string, Language> s_LanguageStrMap = new Dictionary<string, Language>();
 
         static LocalizationUtility()
         {
@@ -90,8 +90,8 @@ namespace TEngine
                 str = language.ToString();
             }
 
-            _languageMap[language] = str;
-            _languageStrMap[str] = language;
+            s_LanguageMap[language] = str;
+            s_LanguageStrMap[str] = language;
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace TEngine
                 return Language.Unspecified;
             }
 
-            if (_languageStrMap.TryGetValue(str, out var language))
+            if (s_LanguageStrMap.TryGetValue(str, out var language))
             {
                 return language;
             }
@@ -122,7 +122,7 @@ namespace TEngine
         /// <returns>语言字符串。</returns>
         public static string GetLanguageStr(Language language)
         {
-            if (_languageMap.TryGetValue(language, out var ret))
+            if (s_LanguageMap.TryGetValue(language, out var ret))
             {
                 return ret;
             }

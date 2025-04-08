@@ -62,7 +62,7 @@ namespace TEngine
         public List<string> HotUpdateAssemblies = new List<string>() {"GameProto.dll", "GameLogic.dll" };
 
         [Header("Need manual setting!")]
-        public List<string> AOTMetaAssemblies = new List<string>() { "mscorlib.dll", "System.dll", "System.Core.dll", "TEngine.Runtime.dll" ,"UniTask.dll", "YooAsset.dll"};
+        public List<string> AOTMetaAssemblies = new List<string>() { "mscorlib.dll", "System.dll", "System.Core.dll", "TEngine.Runtime.dll" };
 
         /// <summary>
         /// Dll of main business logic assembly

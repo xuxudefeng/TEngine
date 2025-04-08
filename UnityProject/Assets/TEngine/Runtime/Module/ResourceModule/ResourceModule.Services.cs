@@ -67,7 +67,7 @@ namespace TEngine
             DecryptResult decryptResult = new DecryptResult();
             decryptResult.ManagedStream = bundleStream;
             decryptResult.Result =
-                AssetBundle.LoadFromStream(bundleStream, 0, GetManagedReadBufferSize());
+                AssetBundle.LoadFromStream(bundleStream, fileInfo.FileLoadCRC, GetManagedReadBufferSize());
             return decryptResult;
         }
 
@@ -82,7 +82,7 @@ namespace TEngine
             DecryptResult decryptResult = new DecryptResult();
             decryptResult.ManagedStream = bundleStream;
             decryptResult.CreateRequest =
-                AssetBundle.LoadFromStreamAsync(bundleStream, 0, GetManagedReadBufferSize());
+                AssetBundle.LoadFromStreamAsync(bundleStream, fileInfo.FileLoadCRC, GetManagedReadBufferSize());
             return decryptResult;
         }
 
@@ -141,7 +141,7 @@ namespace TEngine
             DecryptResult decryptResult = new DecryptResult();
             decryptResult.ManagedStream = null;
             decryptResult.Result =
-                AssetBundle.LoadFromFile(fileInfo.FileLoadPath, 0, GetFileOffset());
+                AssetBundle.LoadFromFile(fileInfo.FileLoadPath, fileInfo.FileLoadCRC, GetFileOffset());
             return decryptResult;
         }
 
@@ -154,7 +154,7 @@ namespace TEngine
             DecryptResult decryptResult = new DecryptResult();
             decryptResult.ManagedStream = null;
             decryptResult.CreateRequest =
-                AssetBundle.LoadFromFileAsync(fileInfo.FileLoadPath, 0, GetFileOffset());
+                AssetBundle.LoadFromFileAsync(fileInfo.FileLoadPath, fileInfo.FileLoadCRC, GetFileOffset());
             return decryptResult;
         }
 
@@ -179,50 +179,6 @@ namespace TEngine
             return 32;
         }
     }
-    
-    
-    #region WebDecryptionServices
-    /// <summary>
-    /// 资源文件偏移加载解密类
-    /// </summary>
-    public class FileOffsetWebDecryption : IWebDecryptionServices
-    {
-        public WebDecryptResult LoadAssetBundle(WebDecryptFileInfo fileInfo)
-        {
-            int offset = GetFileOffset();
-            byte[] decryptedData = new byte[fileInfo.FileData.Length - offset];
-            Buffer.BlockCopy(fileInfo.FileData, offset, decryptedData, 0, decryptedData.Length);
-            // 从内存中加载AssetBundle
-            WebDecryptResult decryptResult = new WebDecryptResult();
-            decryptResult.Result = AssetBundle.LoadFromMemory(decryptedData);
-            return decryptResult;
-        }
-
-        private static int GetFileOffset()
-        {
-            return 32;
-        }
-    }
-    
-    public class FileStreamWebDecryption : IWebDecryptionServices
-    {
-        public WebDecryptResult LoadAssetBundle(WebDecryptFileInfo fileInfo)
-        {
-            // 优化：使用Buffer批量操作替代逐字节异或
-            byte[] decryptedData = new byte[fileInfo.FileData.Length];
-            Buffer.BlockCopy(fileInfo.FileData, 0, decryptedData, 0, fileInfo.FileData.Length);
-            
-            for (int i = 0; i < decryptedData.Length; i++)
-            {
-                decryptedData[i] ^= BundleStream.KEY;
-            }
-
-            WebDecryptResult decryptResult = new WebDecryptResult();
-            decryptResult.Result = AssetBundle.LoadFromMemory(decryptedData);
-            return decryptResult;
-        }
-    }
-    #endregion
 }
 
 /// <summary>
@@ -248,6 +204,7 @@ public class BundleStream : FileStream
         {
             array[i] ^= KEY;
         }
+
         return index;
     }
 }

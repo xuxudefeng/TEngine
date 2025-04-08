@@ -100,7 +100,7 @@ namespace YooAsset
             var playModeImpl = new PlayModeImpl(PackageName, _playMode);
             _bundleQuery = playModeImpl;
             _playModeImpl = playModeImpl;
-            _resourceManager.Initialize(_bundleQuery);
+            _resourceManager.Initialize(parameters, _bundleQuery);
 
             // 初始化资源系统
             InitializationOperation initializeOperation;
@@ -161,6 +161,10 @@ namespace YooAsset
             if (parameters is EditorSimulateModeParameters)
                 throw new Exception($"Editor simulate mode only support unity editor.");
 #endif
+
+            // 检测初始化参数
+            if (parameters.BundleLoadingMaxConcurrency <= 0)
+                throw new Exception($"{nameof(parameters.BundleLoadingMaxConcurrency)} value must be greater than zero.");
 
             // 鉴定运行模式
             if (parameters is EditorSimulateModeParameters)
@@ -263,7 +267,7 @@ namespace YooAsset
         /// <param name="clearParam">执行参数</param>
         public ClearCacheFilesOperation ClearCacheFilesAsync(EFileClearMode clearMode, object clearParam = null)
         {
-            DebugCheckInitialize();
+            DebugCheckInitialize(false);
             var operation = _playModeImpl.ClearCacheFilesAsync(clearMode.ToString(), clearParam);
             OperationSystem.StartOperation(PackageName, operation);
             return operation;
@@ -276,7 +280,7 @@ namespace YooAsset
         /// <param name="clearParam">执行参数</param>
         public ClearCacheFilesOperation ClearCacheFilesAsync(string clearMode, object clearParam = null)
         {
-            DebugCheckInitialize();
+            DebugCheckInitialize(false);
             var operation = _playModeImpl.ClearCacheFilesAsync(clearMode, clearParam);
             OperationSystem.StartOperation(PackageName, operation);
             return operation;
@@ -610,6 +614,7 @@ namespace YooAsset
         private SceneHandle LoadSceneInternal(AssetInfo assetInfo, bool waitForAsyncComplete, LoadSceneMode sceneMode, LocalPhysicsMode physicsMode, bool suspendLoad, uint priority)
         {
             DebugCheckAssetLoadType(assetInfo.AssetType);
+            assetInfo.LoadMethod = AssetInfo.ELoadMethod.LoadScene;
             var loadSceneParams = new LoadSceneParameters(sceneMode, physicsMode);
             var handle = _resourceManager.LoadSceneAsync(assetInfo, loadSceneParams, suspendLoad, priority);
             if (waitForAsyncComplete)
@@ -720,6 +725,7 @@ namespace YooAsset
         private AssetHandle LoadAssetInternal(AssetInfo assetInfo, bool waitForAsyncComplete, uint priority)
         {
             DebugCheckAssetLoadType(assetInfo.AssetType);
+            assetInfo.LoadMethod = AssetInfo.ELoadMethod.LoadAsset;
             var handle = _resourceManager.LoadAssetAsync(assetInfo, priority);
             if (waitForAsyncComplete)
                 handle.WaitForAsyncComplete();
@@ -829,6 +835,7 @@ namespace YooAsset
         private SubAssetsHandle LoadSubAssetsInternal(AssetInfo assetInfo, bool waitForAsyncComplete, uint priority)
         {
             DebugCheckAssetLoadType(assetInfo.AssetType);
+            assetInfo.LoadMethod = AssetInfo.ELoadMethod.LoadSubAssets;
             var handle = _resourceManager.LoadSubAssetsAsync(assetInfo, priority);
             if (waitForAsyncComplete)
                 handle.WaitForAsyncComplete();
@@ -938,6 +945,7 @@ namespace YooAsset
         private AllAssetsHandle LoadAllAssetsInternal(AssetInfo assetInfo, bool waitForAsyncComplete, uint priority)
         {
             DebugCheckAssetLoadType(assetInfo.AssetType);
+            assetInfo.LoadMethod = AssetInfo.ELoadMethod.LoadAllAssets;
             var handle = _resourceManager.LoadAllAssetsAsync(assetInfo, priority);
             if (waitForAsyncComplete)
                 handle.WaitForAsyncComplete();

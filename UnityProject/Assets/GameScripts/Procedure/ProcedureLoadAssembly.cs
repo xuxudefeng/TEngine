@@ -129,7 +129,7 @@ namespace Procedure
 #endif
             if (_mainLogicAssembly == null)
             {
-                Log.Fatal($"Main logic assembly missing. Please check \'ENABLE_HYBRIDCLR\' is defined in Player Settings And check the file of {_setting.LogicMainDllName}.bytes is exits.");
+                Log.Fatal($"Main logic assembly missing.");
                 return;
             }
             

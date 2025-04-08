@@ -1,9 +1,8 @@
-#if ENABLE_HYBRIDCLR
 using System.Collections.Generic;
 using System.Linq;
+using HybridCLR.Editor.Settings;
 using UnityEditor;
 using UnityEngine;
-using HybridCLR.Editor.Settings;
 
 namespace TEngine.Editor
 {
@@ -41,17 +40,11 @@ namespace TEngine.Editor
                 // 标记对象为“已修改”，确保修改能被保存
                 EditorUtility.SetDirty(updateSetting);
                 
-                bool isHotChanged = !HotUpdateAssemblies.SequenceEqual(updateSetting.HotUpdateAssemblies);
-                bool isAOTChanged = !AOTMetaAssemblies.SequenceEqual(updateSetting.AOTMetaAssemblies);
+                bool isHotChanged = HotUpdateAssemblies.SequenceEqual(updateSetting.HotUpdateAssemblies);
+                bool isAOTChanged = AOTMetaAssemblies.SequenceEqual(updateSetting.AOTMetaAssemblies);
                 if (isHotChanged)
                 {
                     HybridCLRSettings.Instance.hotUpdateAssemblies = updateSetting.HotUpdateAssemblies.ToArray();
-                    for (int i = 0; i < updateSetting.HotUpdateAssemblies.Count; i++)
-                    {
-                        var assemblyName = updateSetting.HotUpdateAssemblies[i];
-                        string assemblyNameWithoutExtension = assemblyName.Substring(0, assemblyName.LastIndexOf('.'));
-                        HybridCLRSettings.Instance.hotUpdateAssemblies[i] = assemblyNameWithoutExtension;
-                    }
                     Debug.Log("HotUpdateAssemblies changed");
                 }
                 if (isAOTChanged)
@@ -59,45 +52,7 @@ namespace TEngine.Editor
                     HybridCLRSettings.Instance.patchAOTAssemblies = updateSetting.AOTMetaAssemblies.ToArray();
                     Debug.Log("AOTMetaAssemblies changed");
                 }
-
-                if (isAOTChanged || isHotChanged)
-                {
-                    // 在修改HybridCLRSettings后添加
-                    EditorUtility.SetDirty(HybridCLRSettings.Instance);
-                    AssetDatabase.SaveAssets();
-                }
             }
-        }
-
-        public static void ForceUpdateAssemblies()
-        {
-
-            UpdateSetting updateSetting = null;
-            string[] guids = AssetDatabase.FindAssets("t:UpdateSetting");
-            if (guids.Length >= 1)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-                updateSetting = AssetDatabase.LoadAssetAtPath<UpdateSetting>(path);
-            }
-
-            if (updateSetting == null)
-            {
-                Log.Error("Can not find UpdateSetting");
-                return;
-            }
-            
-            HybridCLRSettings.Instance.hotUpdateAssemblies = updateSetting.HotUpdateAssemblies.ToArray();
-            for (int i = 0; i < updateSetting.HotUpdateAssemblies.Count; i++)
-            {
-                var assemblyName = updateSetting.HotUpdateAssemblies[i];
-                string assemblyNameWithoutExtension = assemblyName.Substring(0, assemblyName.LastIndexOf('.'));
-                HybridCLRSettings.Instance.hotUpdateAssemblies[i] = assemblyNameWithoutExtension;
-            }
-            
-            HybridCLRSettings.Instance.patchAOTAssemblies = updateSetting.AOTMetaAssemblies.ToArray();
-            
-            Debug.Log("HotUpdateAssemblies changed");
         }
     }
 }
-#endif

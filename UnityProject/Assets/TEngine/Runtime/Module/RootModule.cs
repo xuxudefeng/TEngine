@@ -17,7 +17,7 @@ namespace TEngine
             {
                 if (_instance == null)
                 {
-                    _instance = Utility.Unity.FindObjectOfType<RootModule>();
+                    _instance = FindFirstObjectByType<RootModule>();
                 }
                 return _instance;
             }

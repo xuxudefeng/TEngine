@@ -21,12 +21,10 @@ MonoBehaviour:
   - System.dll
   - System.Core.dll
   - TEngine.Runtime.dll
-  - UniTask.dll
-  - YooAsset.dll
   LogicMainDllName: GameLogic.dll
   AssemblyTextAssetExtension: .bytes
   AssemblyTextAssetPath: AssetRaw/DLL
-  UpdateStyle: 1
+  UpdateStyle: 2
   UpdateNotice: 1
   ResDownLoadPath: http://127.0.0.1:8081
   FallbackResDownLoadPath: http://127.0.0.1:8082

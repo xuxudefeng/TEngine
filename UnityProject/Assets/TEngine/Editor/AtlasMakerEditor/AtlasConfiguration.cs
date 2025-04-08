@@ -4,8 +4,8 @@
     using UnityEngine;
     using UnityEditor;
 
-    [FilePath("ProjectSettings/AtlasConfiguration.asset")]
-    public class AtlasConfiguration : EditorScriptableSingleton<AtlasConfiguration>
+    [HybridCLR.Editor.Settings.FilePath("ProjectSettings/AtlasConfiguration.asset")]
+    public class AtlasConfiguration : HybridCLR.Editor.Settings.ScriptableSingleton<AtlasConfiguration>
     {
         [Header("目录设置")]
         [Tooltip("生成的图集输出目录")]

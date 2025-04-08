@@ -65,9 +65,6 @@ MonoBehaviour:
   - uiElementRegex: m_slider
     componentName: Slider
     isUIWidget: 0
-  - uiElementRegex: m_toggle
-    componentName: Toggle
-    isUIWidget: 0
   - uiElementRegex: m_group
     componentName: ToggleGroup
     isUIWidget: 0

@@ -17,10 +17,8 @@ public static class BuildDLLCommand
     public static void Disable()
     {
         ScriptingDefineSymbols.RemoveScriptingDefineSymbol(EnableHybridClrScriptingDefineSymbol);
-#if ENABLE_HYBRIDCLR
         HybridCLR.Editor.SettingsUtil.Enable = false;
-        UpdateSettingEditor.ForceUpdateAssemblies();
-#endif
+        // SyncAssemblyContent.RefreshAssembly();
     }
 
     /// <summary>
@@ -31,10 +29,8 @@ public static class BuildDLLCommand
     {
         ScriptingDefineSymbols.RemoveScriptingDefineSymbol(EnableHybridClrScriptingDefineSymbol);
         ScriptingDefineSymbols.AddScriptingDefineSymbol(EnableHybridClrScriptingDefineSymbol);
-#if ENABLE_HYBRIDCLR
         HybridCLR.Editor.SettingsUtil.Enable = true;
-        UpdateSettingEditor.ForceUpdateAssemblies();
-#endif
+        // SyncAssemblyContent.RefreshAssembly();
     }
 
     [MenuItem("HybridCLR/Build/BuildAssets And CopyTo AssemblyTextAssetPath")]

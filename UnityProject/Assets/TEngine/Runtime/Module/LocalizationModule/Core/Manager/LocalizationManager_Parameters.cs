@@ -25,9 +25,7 @@ namespace TEngine.Localization
 
         public static void AutoLoadGlobalParamManagers()
         {
-#pragma warning disable CS0618 // Type or member is obsolete
             foreach (var manager in Object.FindObjectsOfType<LocalizationParamsManager>())
-#pragma warning restore CS0618 // Type or member is obsolete
             {
                 if (manager._IsGlobalManager && !ParamManagers.Contains(manager))
                 {

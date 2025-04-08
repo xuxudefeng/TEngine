@@ -57,8 +57,6 @@ namespace GameLogic
             }
         }
 
-        protected virtual void OnRelease()
-        {
-        }
+        protected abstract void OnRelease();
     }
 }

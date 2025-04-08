@@ -5,9 +5,6 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using YooAsset;
-#if UNITY_WEBGL && WEIXINMINIGAME && !UNITY_EDITOR
-using WeChatWASM;
-#endif
 
 namespace TEngine
 {
@@ -25,8 +22,6 @@ namespace TEngine
         /// 资源系统运行模式。
         /// </summary>
         public EPlayMode PlayMode { get; set; } = EPlayMode.OfflinePlayMode;
-        
-        public EncryptionType EncryptionType { get; set; } = EncryptionType.None;
 
         /// <summary>
         /// 设置异步系统参数，每帧执行消耗的最大时间切片（单位：毫秒）
@@ -169,14 +164,12 @@ namespace TEngine
                 createParameters.EditorFileSystemParameters = FileSystemParameters.CreateDefaultEditorFileSystemParameters(packageRoot);
                 initializationOperation = package.InitializeAsync(createParameters);
             }
-            
-            IDecryptionServices decryptionServices = CreateDecryptionServices();
-            
+
             // 单机运行模式
             if (playMode == EPlayMode.OfflinePlayMode)
             {
                 var createParameters = new OfflinePlayModeParameters();
-                createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters(decryptionServices);
+                createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters();
                 initializationOperation = package.InitializeAsync(createParameters);
             }
 
@@ -187,8 +180,8 @@ namespace TEngine
                 string fallbackHostServer = FallbackHostServerURL;
                 IRemoteServices remoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
                 var createParameters = new HostPlayModeParameters();
-                createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters(decryptionServices);
-                createParameters.CacheFileSystemParameters = FileSystemParameters.CreateDefaultCacheFileSystemParameters(remoteServices, decryptionServices);
+                createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters();
+                createParameters.CacheFileSystemParameters = FileSystemParameters.CreateDefaultCacheFileSystemParameters(remoteServices);
                 initializationOperation = package.InitializeAsync(createParameters);
             }
 
@@ -197,17 +190,11 @@ namespace TEngine
             {
                 var createParameters = new WebPlayModeParameters();
 #if UNITY_WEBGL && WEIXINMINIGAME && !UNITY_EDITOR
-                Log.Info("=======================WEIXINMINIGAME=======================");
-                IWebDecryptionServices webDecryptionServices = CreateWebDecryptionServices();
-
-                // 注意：如果有子目录，请修改此处！
-                string packageRoot = $"{WeChatWASM.WX.env.USER_DATA_PATH}/__GAME_FILE_CACHE";
 			    string defaultHostServer = HostServerURL;
                 string fallbackHostServer = FallbackHostServerURL;
                 IRemoteServices remoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
-                createParameters.WebServerFileSystemParameters = WechatFileSystemCreater.CreateFileSystemParameters(packageRoot, remoteServices, webDecryptionServices);
+                createParameters.WebServerFileSystemParameters = WechatFileSystemCreater.CreateWechatFileSystemParameters(remoteServices);
 #else
-                Log.Info("=======================UNITY_WEBGL=======================");
                 createParameters.WebServerFileSystemParameters = FileSystemParameters.CreateDefaultWebServerFileSystemParameters();
 #endif
                 initializationOperation = package.InitializeAsync(createParameters);
@@ -218,32 +205,6 @@ namespace TEngine
             Log.Info($"Init resource package version : {initializationOperation?.Status}");
 
             return initializationOperation;
-        }
-
-        /// <summary>
-        /// 创建解密服务。
-        /// </summary>
-        private IDecryptionServices CreateDecryptionServices()
-        {
-            return EncryptionType switch
-            {
-                EncryptionType.FileOffSet => new FileOffsetDecryption(),
-                EncryptionType.FileStream => new FileStreamDecryption(),
-                _ => null
-            };
-        }
-
-        /// <summary>
-        /// 创建Web解密服务。
-        /// </summary>
-        private IWebDecryptionServices CreateWebDecryptionServices()
-        {
-            return EncryptionType switch
-            {
-                EncryptionType.FileOffSet => new FileOffsetWebDecryption(),
-                EncryptionType.FileStream => new FileStreamWebDecryption(),
-                _ => null
-            };
         }
 
         /// <summary>

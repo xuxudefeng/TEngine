@@ -25,11 +25,6 @@ namespace TEngine
         /// 获取或设置运行模式。
         /// </summary>
         EPlayMode PlayMode { get; set; }
-        
-        /// <summary>
-        /// 资源加密方式。
-        /// </summary>
-        EncryptionType EncryptionType { get; set; }
 
         /// <summary>
         /// 是否边玩边下载。

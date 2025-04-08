@@ -16,24 +16,21 @@ MonoBehaviour:
   useGlobalIl2cpp: 0
   hybridclrRepoURL: https://gitee.com/focus-creative-games/hybridclr
   il2cppPlusRepoURL: https://gitee.com/focus-creative-games/il2cpp_plus
-  hotUpdateAssemblyDefinitions: []
-  hotUpdateAssemblies:
-  - GameProto
-  - GameLogic
+  hotUpdateAssemblyDefinitions:
+  - {fileID: 5897886265953266890, guid: 6e76b07590314a543b982daed6af2509, type: 3}
+  - {fileID: 5897886265953266890, guid: af760644fe07b7945b1afa1ccb7cff14, type: 3}
+  hotUpdateAssemblies: []
   preserveHotUpdateAssemblies: []
   hotUpdateDllCompileOutputRootDir: HybridCLRData/HotUpdateDlls
-  externalHotUpdateAssembliyDirs: []
+  externalHotUpdateAssembliyDirs:
+  - 
   strippedAOTDllOutputRootDir: HybridCLRData/AssembliesPostIl2CppStrip
   patchAOTAssemblies:
   - mscorlib.dll
   - System.dll
   - System.Core.dll
   - TEngine.Runtime.dll
-  - YooAsset.dll
-  - UniTask.dll
   outputLinkFile: HybridCLRGenerate/link.xml
   outputAOTGenericReferenceFile: HybridCLRGenerate/AOTGenericReferences.cs
   maxGenericReferenceIteration: 10
   maxMethodBridgeGenericIteration: 10
-  enableProfilerInReleaseBuild: 0
-  enableStraceTraceInWebGLReleaseBuild: 0

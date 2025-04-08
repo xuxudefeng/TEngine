@@ -110,7 +110,7 @@ namespace YooAsset
         {
             if (name == FileSystemParametersDefine.DISABLE_UNITY_WEB_CACHE)
             {
-                DisableUnityWebCache = (bool)value;
+                DisableUnityWebCache = Convert.ToBoolean(value);
             }
             else if (name == FileSystemParametersDefine.DECRYPTION_SERVICES)
             {
@@ -198,10 +198,9 @@ namespace YooAsset
             string fileName = YooAssetSettingsData.GetManifestBinaryFileName(PackageName, packageVersion);
             return PathUtility.Combine(FileRoot, fileName);
         }
-        public string GetCatalogFileLoadPath()
+        public string GetCatalogBinaryFileLoadPath()
         {
-            string fileName = Path.GetFileNameWithoutExtension(DefaultBuildinFileSystemDefine.BuildinCatalogFileName);
-            return YooAssetSettingsData.GetYooResourcesLoadPath(PackageName, fileName);
+            return PathUtility.Combine(_webPackageRoot, DefaultBuildinFileSystemDefine.BuildinCatalogBinaryFileName);
         }
 
         /// <summary>
